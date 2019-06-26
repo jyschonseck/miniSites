@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>zz</title>
+</head>
+
+<body>
+  <div id="ctnInfos">
+  </div>
+  <video id="maVideo" controlsList="nodownload" oncontextmenu="return false" src = "https://rpn.univ-lille3.fr/public/legolang/test/videoTestMuette.mp4">
+
+  </video>
+  <div id="ctnVidInfos">
+<p><span id='heureActuelle'>00:00</span>
+  <span id="heureDuree"></span></p>
+
+  </div>
+
+
+  <script type="text/javascript">
+    var visioMax = 1;
+    var idV = "okapi";
+    var nbV = 0
+    if (localStorage[idV]) {
+      nbV = parseInt(localStorage[idV]);
+    }
+
+function VidPlayPause(){
+  if (maVideo.paused) {
+    maVideo.play();
+    document.getElementById('ctnVidInfos').innerHTML = "<p><span id='heureActuelle'>00:00</span>/" + parseInt(maVideo.duration) + "</p>";
+  } else {
+    maVideo.pause();
+  }
+}
+
+    document.addEventListener('DOMContentLoaded', function() {
+      //******* info :
+      document.getElementById('ctnInfos').innerHTML = "<p>Vous avez déjà visonné : <span id='tNbV'>" + nbV + "</span> fois cette vidéo</p>";
+      document.getElementById('ctnInfos').innerHTML += "<p>Vous avez droit à : " + visioMax + " visionnage(s)</p>";
+
+      var maVideo = document.getElementById('maVideo');
+       document.getElementById('heureDuree').innerHTML = parseInt(maVideo.duration);
+
+      if (nbV < visioMax) {
+        document.getElementById('ctnInfos').innerHTML += "<p>Cliquez sur la vidéo pour la mettre en lecture (ou la mettre en pause)</p>";
+        maVideo.addEventListener("click", VidPlayPause);
+      } else {
+
+      }
+
+      // ***pose écouteur de fin de video
+      maVideo.addEventListener("ended", function() {
+        nbV += 1
+        localStorage[idV] = nbV;
+        document.getElementById('tNbV').innerHTML = nbV;
+        if(nbV = visioMax){
+          maVideo.removeEventListener("click", VidPlayPause);
+        }
+      });
+      //**** intervale pour maj de position
+      var intAffichHeure = setInterval(function() {
+        document.getElementById('heureActuelle').innerHTML = parseInt(maVideo.currentTime);
+      }, 888);
+
+    });
+  </script>
+</body>
+
+</html>
